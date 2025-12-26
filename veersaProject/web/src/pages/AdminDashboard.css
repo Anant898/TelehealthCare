@@ -1,0 +1,399 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background: #f7fafc;
+}
+
+.admin-loading {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Header */
+.admin-header {
+  background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+  padding: 25px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-logo {
+  font-size: 50px;
+}
+
+.admin-header-left h1 {
+  color: white;
+  margin: 0 0 5px 0;
+  font-size: 26px;
+}
+
+.admin-header-left p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-size: 14px;
+}
+
+.admin-logout-button {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 2px solid white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.admin-logout-button:hover {
+  background: white;
+  color: #1a202c;
+}
+
+/* Stats Grid */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 30px 40px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.admin-stat-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+  border-left: 4px solid;
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stat-patients { border-color: #4299e1; }
+.stat-doctors { border-color: #9f7aea; }
+.stat-consultations { border-color: #48bb78; }
+.stat-revenue { border-color: #ed8936; }
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.stat-header .stat-icon {
+  font-size: 32px;
+}
+
+.stat-label {
+  color: #718096;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-stat-card h2 {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 10px 0;
+}
+
+.stat-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-breakdown span {
+  font-size: 12px;
+  color: #718096;
+  font-weight: 500;
+}
+
+/* Specialty Section */
+.specialty-section {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px 30px;
+}
+
+.specialty-section h3 {
+  color: #2d3748;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.specialty-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.specialty-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.specialty-name {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.specialty-count {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Tabs */
+.admin-tabs {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.admin-tab {
+  background: white;
+  border: 2px solid #e2e8f0;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #718096;
+  white-space: nowrap;
+}
+
+.admin-tab:hover {
+  border-color: #2d3748;
+  color: #2d3748;
+}
+
+.admin-tab.active {
+  background: #2d3748;
+  color: white;
+  border-color: #2d3748;
+}
+
+/* Content */
+.admin-content {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+}
+
+.overview-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 25px;
+}
+
+.recent-section {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.recent-section h3 {
+  color: #2d3748;
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: #f7fafc;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.recent-item:hover {
+  background: #edf2f7;
+}
+
+.recent-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.recent-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.recent-name {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 14px;
+}
+
+.recent-email {
+  color: #718096;
+  font-size: 12px;
+}
+
+.recent-date {
+  color: #718096;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Data Table */
+.data-table {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+.data-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px;
+  background: #f7fafc;
+  color: #2d3748;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.data-table td {
+  padding: 15px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:hover {
+  background: #f7fafc;
+}
+
+.delete-button {
+  background: #fc8181;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.delete-button:hover {
+  background: #f56565;
+  transform: translateY(-1px);
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.badge-pending { background: #fef5e7; color: #f6ad55; }
+.badge-scheduled { background: #ebf8ff; color: #4299e1; }
+.badge-accepted { background: #f0fff4; color: #48bb78; }
+.badge-in-progress { background: #faf5ff; color: #9f7aea; }
+.badge-completed { background: #f0fff4; color: #48bb78; }
+.badge-cancelled { background: #fff5f5; color: #fc8181; }
+
+.status-available {
+  color: #48bb78;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.status-unavailable {
+  color: #fc8181;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .admin-stats-grid,
+  .admin-content,
+  .admin-tabs,
+  .specialty-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .overview-content {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-tabs {
+    overflow-x: scroll;
+  }
+}
+

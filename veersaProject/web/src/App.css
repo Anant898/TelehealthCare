@@ -1,0 +1,18 @@
+.App {
+  min-height: 100vh;
+  background-color: #FAFAFA;
+}
+
+/* Medical Theme Colors */
+:root {
+  --primary-blue: #0066CC;
+  --primary-blue-light: #4A90E2;
+  --white: #FFFFFF;
+  --light-gray: #F5F7FA;
+  --success-green: #28A745;
+  --alert-red: #DC3545;
+  --text-dark: #2C3E50;
+  --text-dark-alt: #34495E;
+  --background: #FAFAFA;
+}
+
