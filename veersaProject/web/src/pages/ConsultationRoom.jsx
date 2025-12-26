@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import VideoConsultation from '../components/VideoConsultation';
-import Chat from '../components/Chat';
-import Transcription from '../components/Transcription';
 import Payment from '../components/Payment';
 import './ConsultationRoom.css';
 
@@ -44,15 +42,6 @@ const ConsultationRoom = () => {
     }
   }, [userRole, navigate]);
 
-  const checkPaymentConfig = async () => {
-    try {
-      const response = await api.get('/payments/config');
-      return response.data;
-    } catch (error) {
-      console.error('Error checking payment config:', error);
-      return { configured: false };
-    }
-  };
 
   const updateConsultationStatus = useCallback(async (status) => {
     try {
@@ -74,18 +63,12 @@ const ConsultationRoom = () => {
 
         // Payment is only for patients, not doctors
         if (userRole === 'patient') {
-          // Check payment status - skip if Square not configured
-          const paymentConfig = await checkPaymentConfig();
-          if (!paymentConfig.configured) {
-            // Square not configured, skip payment
-            setPaymentComplete(true);
-            // Only update to in-progress if doctor has already accepted
-            if (response.data.consultation.status === 'accepted') {
-              await updateConsultationStatus('in-progress');
-            }
-          } else if (!response.data.consultation.payment) {
+          // Check if payment already exists for this consultation
+          if (!response.data.consultation.payment) {
+            // No payment yet - show payment screen (it handles skip logic if Square not configured)
             setShowPayment(true);
           } else {
+            // Payment already completed
             setPaymentComplete(true);
             // Only update to in-progress if doctor has accepted
             if (response.data.consultation.status === 'accepted') {
@@ -158,52 +141,11 @@ const ConsultationRoom = () => {
     );
   }
 
-  const getStatusDisplay = () => {
-    switch (consultation?.status) {
-      case 'scheduled':
-        return { label: 'Waiting for Doctor', color: '#f59e0b', isWaiting: true };
-      case 'accepted':
-        return { label: 'Doctor Accepted', color: '#3b82f6', isWaiting: false };
-      case 'in-progress':
-        return { label: 'In Progress', color: '#10b981', isWaiting: false };
-      default:
-        return { label: consultation?.status || 'Unknown', color: '#6b7280', isWaiting: false };
-    }
-  };
-
-  const statusDisplay = getStatusDisplay();
-
   return (
     <div className="consultation-room">
-      {/* Consultation Header */}
-      <div className="consultation-header">
-        <div className="consultation-info-bar">
-          <span className="specialty-badge">{consultation?.specialty}</span>
-          <span className="status-indicator" style={{ color: statusDisplay.color }}>
-            <span className="pulse" style={{ background: statusDisplay.color }}></span>
-            {statusDisplay.label}
-          </span>
-          {userRole === 'doctor' && consultation?.patient && (
-            <span className="patient-name-badge">
-              Patient: {consultation.patient.name}
-            </span>
-          )}
-          {userRole === 'patient' && consultation?.doctor && (
-            <span className="doctor-name-badge">
-              Dr. {consultation.doctor.name}
-            </span>
-          )}
-          {userRole === 'patient' && !consultation?.doctor && consultation?.status === 'scheduled' && (
-            <span className="waiting-badge">
-              A doctor will join soon...
-            </span>
-          )}
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="consultation-main">
-        <div className="consultation-video-section">
+        <div className="consultation-video-section full-width">
           {roomUrl && token && (
             <VideoConsultation
               roomUrl={roomUrl}
@@ -211,11 +153,6 @@ const ConsultationRoom = () => {
               onLeave={handleLeave}
             />
           )}
-        </div>
-
-        <div className="consultation-sidebar">
-          <Chat consultationId={id} />
-          <Transcription consultationId={id} />
         </div>
       </div>
 

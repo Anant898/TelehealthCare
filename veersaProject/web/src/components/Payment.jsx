@@ -5,17 +5,27 @@ import './Payment.css';
 const Payment = ({ consultationId, amount, onComplete, onCancel }) => {
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [cardReady, setCardReady] = useState(false);
   const [config, setConfig] = useState(null);
   const [error, setError] = useState('');
   const [skipPayment, setSkipPayment] = useState(false);
   const cardRef = useRef(null);
   const paymentsRef = useRef(null);
   const cardInstanceRef = useRef(null);
+  const initializingRef = useRef(false);
 
+  // Fetch config on mount
   useEffect(() => {
     fetchConfig();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Initialize Square after config is loaded and component is rendered
+  useEffect(() => {
+    if (config?.configured && !skipPayment && !cardReady && cardRef.current && !initializingRef.current) {
+      initializeSquare(config);
+    }
+  }, [config, skipPayment, cardReady]);
 
   const fetchConfig = async () => {
     try {
@@ -25,43 +35,34 @@ const Payment = ({ consultationId, amount, onComplete, onCancel }) => {
       // Skip payment if in test mode or not configured
       if (response.data.testMode || !response.data.configured) {
         setSkipPayment(true);
-        setInitializing(false);
-        return;
-      }
-      
-      // Initialize Square if properly configured
-      if (response.data.configured) {
-        try {
-          await initializeSquare(response.data);
-        } catch (initError) {
-          console.error('Square initialization failed, enabling skip payment:', initError);
-          setSkipPayment(true);
-        }
       }
       
       setInitializing(false);
     } catch (error) {
       console.error('Error fetching payment config:', error);
       setError('Failed to load payment configuration');
-      setSkipPayment(true); // Allow skipping if config fails
+      setSkipPayment(true);
       setInitializing(false);
     }
   };
 
-  const initializeSquare = async (config) => {
+  const initializeSquare = async (configData) => {
+    // Prevent double initialization
+    if (cardInstanceRef.current || initializingRef.current) return;
+    initializingRef.current = true;
+    
     try {
       // Load Square Web Payments SDK
       if (!window.Square) {
         const script = document.createElement('script');
-        script.src = 'https://sandbox.web.squarecdn.com/v1/square.js';
-        if (config.squareEnvironment === 'production') {
-          script.src = 'https://web.squarecdn.com/v1/square.js';
-        }
+        script.src = configData.squareEnvironment === 'production' 
+          ? 'https://web.squarecdn.com/v1/square.js'
+          : 'https://sandbox.web.squarecdn.com/v1/square.js';
         document.head.appendChild(script);
         
         await new Promise((resolve, reject) => {
           script.onload = resolve;
-          script.onerror = reject;
+          script.onerror = () => reject(new Error('Failed to load Square SDK'));
         });
       }
 
@@ -71,19 +72,25 @@ const Payment = ({ consultationId, amount, onComplete, onCancel }) => {
 
       // Initialize Square Payments
       const payments = window.Square.payments(
-        config.squareApplicationId,
-        config.squareEnvironment === 'production' ? 'production' : 'sandbox'
+        configData.squareApplicationId,
+        configData.squareEnvironment === 'production' ? 'production' : 'sandbox'
       );
       paymentsRef.current = payments;
 
       // Initialize Card payment method
-      const card = await payments.card();
-      await card.attach(cardRef.current);
-      cardInstanceRef.current = card;
+      if (cardRef.current && !cardInstanceRef.current) {
+        const card = await payments.card();
+        await card.attach(cardRef.current);
+        cardInstanceRef.current = card;
+        setCardReady(true);
+        setError('');
+        console.log('✅ Square payment form initialized successfully');
+      }
 
     } catch (error) {
       console.error('Error initializing Square:', error);
-      setError('Failed to initialize payment form. Please check your Square configuration.');
+      setError('Failed to initialize payment form. Please refresh the page and try again.');
+      initializingRef.current = false;
     }
   };
 

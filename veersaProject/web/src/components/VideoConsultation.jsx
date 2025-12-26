@@ -6,7 +6,6 @@ const VideoConsultation = ({ roomUrl, token, onLeave }) => {
   const videoContainerRef = useRef(null);
   const [callFrame, setCallFrame] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [retryCount, setRetryCount] = useState(0);
   const onLeaveRef = useRef(onLeave);
   const mountedRef = useRef(true);
@@ -25,7 +24,6 @@ const VideoConsultation = ({ roomUrl, token, onLeave }) => {
         return;
       }
 
-      setIsLoading(true);
       setError(null);
 
       try {
@@ -41,7 +39,6 @@ const VideoConsultation = ({ roomUrl, token, onLeave }) => {
         }
         
         setCallFrame(frame);
-        setIsLoading(false);
 
         // Set up event listener for when user leaves via Daily's button
         frame.on('left-meeting', () => {
@@ -83,8 +80,6 @@ const VideoConsultation = ({ roomUrl, token, onLeave }) => {
       } catch (error) {
         console.error('Video initialization error:', error);
         if (mountedRef.current) {
-          setIsLoading(false);
-          
           // Provide specific error messages
           if (error.message?.includes('NotAllowedError') || error.message?.includes('Permission')) {
             setError('Camera/microphone access denied. Please enable permissions in your browser settings.');
@@ -135,12 +130,6 @@ const VideoConsultation = ({ roomUrl, token, onLeave }) => {
 
   return (
     <div className="video-consultation">
-      {isLoading && (
-        <div className="video-loading">
-          <div className="loading-spinner"></div>
-          <p>Connecting to video call...</p>
-        </div>
-      )}
       <div className="video-container" ref={videoContainerRef}></div>
     </div>
   );

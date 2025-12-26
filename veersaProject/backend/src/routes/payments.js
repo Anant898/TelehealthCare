@@ -11,22 +11,23 @@ router.get('/config', authMiddleware, (req, res) => {
   const SQUARE_APPLICATION_ID = process.env.SQUARE_APPLICATION_ID;
   const SQUARE_ACCESS_TOKEN = process.env.SQUARE_ACCESS_TOKEN;
   const SQUARE_ENVIRONMENT = process.env.SQUARE_ENVIRONMENT || 'sandbox';
-  const TEST_MODE = process.env.TEST === 'true';
   
-  // Skip payment in test mode or if Square credentials are missing/incomplete
-  const hasValidCredentials = !!SQUARE_APPLICATION_ID && 
-                              !!SQUARE_ACCESS_TOKEN && 
-                              SQUARE_APPLICATION_ID.startsWith('sq0') &&
-                              SQUARE_ACCESS_TOKEN.length > 10;
+  // Check if Square credentials exist
+  const hasCredentials = !!SQUARE_APPLICATION_ID && !!SQUARE_ACCESS_TOKEN;
   
-  // In test mode, always return not configured to skip payment
-  const isConfigured = !TEST_MODE && hasValidCredentials;
+  // Log for debugging
+  console.log('Square Config Check:', {
+    hasAppId: !!SQUARE_APPLICATION_ID,
+    hasToken: !!SQUARE_ACCESS_TOKEN,
+    environment: SQUARE_ENVIRONMENT,
+    configured: hasCredentials
+  });
 
   res.json({
-    squareApplicationId: isConfigured ? SQUARE_APPLICATION_ID : null,
+    squareApplicationId: hasCredentials ? SQUARE_APPLICATION_ID : null,
     squareEnvironment: SQUARE_ENVIRONMENT,
-    configured: isConfigured,
-    testMode: TEST_MODE
+    configured: hasCredentials,
+    testMode: false
   });
 });
 
